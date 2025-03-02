@@ -5,9 +5,8 @@ import { toast } from 'react-toastify';
 import ChatBox from '../componet/ChatBox';
 import ChatEmpty from '../componet/ChatEmpty';
 import { io } from "socket.io-client";
-import { LuMessageCircleHeart } from "react-icons/lu";
-import { CgProfile } from "react-icons/cg";
 import { FaSignOutAlt } from 'react-icons/fa';
+import { RiChatSmileAiFill } from "react-icons/ri";
 
 function Chat() {
   const socket = useRef();
@@ -37,7 +36,7 @@ function Chat() {
   const fetchUsers = async (userId) => {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/getAlluser', { id: userId });
-      toast.success(response.data.message);
+      // toast.success(response.data.message);
       setAllUsers(response.data.users);
     } catch (error) {
       console.error('Error:', error?.response?.data?.message || 'Something went wrong');
@@ -67,27 +66,33 @@ function Chat() {
     <div className="h-screen flex justify-center items-center bg-[#1a1c35]">
       {
         Loading &&
-        <div className="grid grid-cols-[30%_70%] gap-1 h-4/5 w-[80%] shadow-lg rounded-lg max-sm:grid-cols-1 max-sm:w-full max-sm:h-screen">
+        <div className="grid grid-cols-[30%_70%] gap-1 h-4/5 w-[80%] shadow-lg rounded-lg max-sm:grid-cols-1 
+        max-sm:w-full max-sm:h-screen">
 
-          <div className="bg-gradient-to-b from-[#5A3F79] to-[#2B1B3A] grid grid-rows-[12%_76%_12%] h-[80vh] rounded-l-lg max-sm:rounded-lg">
+          <div className="bg-gradient-to-b from-[#5A3F79] to-[#2B1B3A] grid grid-rows-[12%_76%_12%] h-[80vh] 
+          rounded-l-lg max-sm:rounded-lg">
 
-            <div className="flex justify-center items-center font-bold text-xl text-white tracking-wide shadow-md max-sm:text-lg gap-2">
-              <LuMessageCircleHeart />
+            <div className="flex justify-center items-center font-bold text-xl text-white tracking-wide shadow-md
+             max-sm:text-lg gap-2">
+              <RiChatSmileAiFill />
               <h1 className='font-serif'> GupShup </h1>
             </div>
 
-            <div className="overflow-y-auto scrollbar-thin  scrollbar-thumb-gray-500 scrollbar-track-transparent p-2 space-y-2">
+            <div className="overflow-y-auto scrollbar-thin  scrollbar-thumb-gray-500 scrollbar-track-transparent
+             p-2 space-y-2">
               {allUsers.length > 0 ? (
                 allUsers.map((u) => (
                   <div
                     key={u._id}
                     onClick={() => handleUserClick(u)}
-                    className={`p-3 rounded-lg cursor-pointer flex items-center gap-3 transition duration-300 ${selectedUser && selectedUser._id === u._id
-                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white scale-105'
-                        : 'bg-[#4A3A60] hover:bg-[#6A4B90] text-white'
+                    className={`p-3 rounded-lg cursor-pointer flex items-center gap-3 transition duration-300
+                       ${selectedUser && selectedUser._id === u._id
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white scale-105'
+                      : 'bg-[#4A3A60] hover:bg-[#6A4B90] text-white'
                       }`}
                   >
-                    <div className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center font-semibold max-sm:w-8 max-sm:h-8">
+                    <div className="w-9 h-9 bg-blue-400 rounded-full flex items-center justify-center
+                     font-semibold max-sm:w-8 max-sm:h-8">
                       {u.name.charAt(0).toUpperCase()}
                     </div>
                     <span className="flex-1 truncate">{u.name}</span>
@@ -99,12 +104,14 @@ function Chat() {
             </div>
 
 
-            <div className="relative flex justify-center items-center bg-[#36254d] text-white font-medium tracking-wide shadow-md max-sm:text-sm">
+            <div className="relative flex justify-center items-center bg-[#36254d] text-white 
+            font-medium tracking-wide shadow-md max-sm:text-sm">
               {user ? (
                 <>
                   <div onClick={toggleDropdown}
                     className=" cursor-pointer flex items-center gap-1" >
-                    <div className="w-10 h-10 bg-[#e4cd46] rounded-full flex items-center justify-center font-semibold max-sm:w-8 max-sm:h-8 text-black">
+                    <div className="w-8 h-8 bg-[#e4cd46] rounded-full flex items-center justify-center 
+                    font-semibold max-sm:w-8 max-sm:h-8 text-black">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                     <span className="flex-1 truncate text-2xl text-blue-400">{user.name}</span>
@@ -136,8 +143,9 @@ function Chat() {
               (<div> <ChatBox selectedUser={selectedUser} setSelectedUser={setSelectedUser} user={user} socket={socket} /> </div>)
               : (<div> <ChatEmpty user={user} /> </div>)
           }
-
-
+          <div class="fixed flex justify-center items-center gap-1 bottom-2 left-1/2 -translate-x-1/2 p-2 text-white text-sm">
+            <RiChatSmileAiFill />  Created by <span className='text-rose-200 font-serif uppercase '>Jeevan Parmar</span>
+          </div>
 
         </div>}
     </div>

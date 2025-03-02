@@ -36,10 +36,19 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
         console.log("current", socket.current);
         if (socket.current) {
             socket.current.on("msg-recieve", (msg) => {
-                setArrivalMessage({ fromSelf: false, message: msg });
+                
+                // Ensure message is for the selected user
+                if (msg.from === selectedUser._id) {
+                    setArrivalMessage({ fromSelf: false, message: msg.msg });
+                }
             });
         }
-    }, []);
+    
+        // Clean up listener when component unmounts
+        return () => {
+            socket.current.off("msg-recieve");
+        };
+    }, [selectedUser]); 
 
     useEffect(() => {
         arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);

@@ -36,7 +36,7 @@ function Login() {
 
     await axios.post("http://localhost:5000/api/auth/login",user)
     .then(response => {
-        toast.success(response.data.message);
+        // toast.success(response.data.message);
        const user = response.data.user;
        localStorage.setItem('user', JSON.stringify(user)); 
         navigate("/");
@@ -62,6 +62,7 @@ function Login() {
             <input
                 type="text"
                 placeholder="Enter User Name"
+                required
                 value={user.name}
                 onChange={e => setUser({ ...user, name: e.target.value })}
                 className="p-3 w-full border border-blue-500 rounded-lg bg-transparent text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -70,6 +71,7 @@ function Login() {
             <input
                 type="password"
                 placeholder="Enter Password"
+                required
                 value={user.password}
                 onChange={e => setUser({ ...user, password: e.target.value })}
                 className="p-3 w-full border border-blue-500 rounded-lg bg-transparent text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
