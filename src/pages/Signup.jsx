@@ -2,16 +2,18 @@ import {useNavigate } from "react-router-dom";
 import { useState , useEffect } from "react";
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import Logo from "../assets/loading.gif";
+
 
 function Signup() {
-
+ const SIGNUP = `${process.env.REACT_APP_BACKEND_URL}/api/auth/signup`;
   const navigate = useNavigate();
 
 useEffect(()=>{
 if(localStorage.getItem("user")){
   navigate("/");
 }
-},[]);
+},[navigate]);
 
   const [user, setUser] = useState({
     email: '',
@@ -19,6 +21,8 @@ if(localStorage.getItem("user")){
     name: '',
     confirmPassword: ''
   });
+
+  const [loading ,setLoading] =useState(false);
 
   const handleLoginClick = () => {
     navigate("/login");
@@ -36,7 +40,7 @@ if(localStorage.getItem("user")){
       return;
     }
     if (user.name.length < 4) {
-      toast.error("UserName should be atleast 4 characters");
+      toast.error("UserName should be atleast 4  characters");
       return;
     }
     if (user.password.length < 6) {
@@ -44,17 +48,23 @@ if(localStorage.getItem("user")){
       return;
     }
     //api call
-    await axios.post("http://localhost:5000/api/auth/signup",user)
+    console.log("backend",process.env.REACT_APP_BACKEND_URL)
+    console.log("url ", SIGNUP);
+    setLoading(true);
+    await axios.post(SIGNUP ,user)
             .then(response => {
                 toast.success(response.data.message);
+                console.log("toast",response.data.message)
                const user = response.data.user;
                localStorage.setItem('user', JSON.stringify(user)); 
                 navigate("/");
             })
             .catch(error => {
-                console.log( error.response.data.message); 
+                console.log( "error",error.response.data.message); 
                 toast.error(error.response.data.message);
             });
+
+            setLoading(false);
   };
 
 
@@ -63,7 +73,7 @@ if(localStorage.getItem("user")){
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#2a1e37] to-[#1a1523] p-6">
       <div>
       <h1 className="text-4xl font-extrabold mb-5 text-center text-white"> GupShup</h1>
-
+      { !loading &&
     <div className="bg-black bg-opacity-80 p-8 rounded-2xl shadow-xl max-w-md w-full space-y-6">
 
         <h1 className="text-xl  mb-6 text-center text-white">SignUp</h1>
@@ -119,6 +129,13 @@ if(localStorage.getItem("user")){
         </div>
 
     </div>
+    }
+    {
+      loading && 
+      <div className="p-8 rounded-2xl shadow-xl max-w-md w-full space-y-6">
+        <img src={Logo} alt="Loading"  className="w-full"/>
+      </div>
+    }
 </div>
 </div>
   );

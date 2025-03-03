@@ -2,17 +2,22 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from 'react-toastify';
 import axios from "axios";
-import { LuMessageCircleHeart } from "react-icons/lu";
+import Logo from "../assets/loading.gif";
 
 function Login() {
+  const navigate = useNavigate();
+
+
+ const LOGIN = `${process.env.REACT_APP_BACKEND_URL}/api/auth/login`;
+ const [loading ,setLoading] = useState(false);
+
 
   useEffect(() => {
     if (localStorage.getItem("user")) {
       navigate("/");
     }
-  }, [ ]);
+  }, [navigate]);
 
-  const navigate = useNavigate();
   const [user, setUser] = useState({
     name: '',
     password: '',
@@ -33,8 +38,8 @@ function Login() {
       toast.error("password incorrect");
       return;
     }
-
-    await axios.post("http://localhost:5000/api/auth/login",user)
+    setLoading(true);
+    await axios.post(LOGIN,user)
     .then(response => {
         // toast.success(response.data.message);
        const user = response.data.user;
@@ -45,14 +50,16 @@ function Login() {
         console.log( error.response.data.message); 
         toast.error(error.response.data.message);
     });
+    setLoading(false);
 
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#2a1e37] to-[#1a1523] p-6">
 <div>
-          <h1 className="text-4xl font-extrabold mb-5 text-center text-white"> GupShup</h1>
-          
+     
+        <h1 className="text-4xl font-extrabold mb-5 text-center text-white"> GupShup</h1>
+        { !loading &&    
 
     <div className="bg-black bg-opacity-80 p-8 rounded-2xl shadow-xl max-w-md w-full space-y-6 ">
     
@@ -89,8 +96,14 @@ function Login() {
             <p className="text-gray-300">Don't have an account?</p>
             <button onClick={handleLoginClick} className="text-blue-400 hover:underline">Sign Up</button>
         </div>
-
-    </div>
+      
+    </div>}
+    {
+          loading && 
+          <div className="p-8 rounded-2xl shadow-xl max-w-md w-full space-y-6">
+            <img src={Logo} alt="Loading"  className="w-full"/>
+          </div>
+        }
 </div>
 </div>
 

@@ -10,7 +10,7 @@ function ChatEmpty({ user }) {
                 <div className='relative'>
                     <img 
                         src={Logo} 
-                        alt='Welcome Image' 
+                        alt='Welcome' 
                         className='w-40 h-40 object-cover rounded-full shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out'
                     />
                     <div className='absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 opacity-30 blur-lg'></div>

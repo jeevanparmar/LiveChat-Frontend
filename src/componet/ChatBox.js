@@ -3,52 +3,63 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { IoMdSend } from "react-icons/io";
 import { MdOutlineArrowBackIos } from "react-icons/md";
+import "../App.css"
 
 function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
+
+    const B_URL = process.env.REACT_APP_BACKEND_URL ;
+    const ADDMSG = `${B_URL}/api/auth/addMessage` ;
+    const GETMSG = `${B_URL}/api/auth/getMessages` ;
+ 
     const [messages, setMessages] = useState([]); 
     const [newMessage, setNewMessage] = useState('');
     const scrollRef = useRef(null); 
     const [arrivalMessage, setArrivalMessage] = useState(null);
 
     const sendMessage = async () => {
-        if (!newMessage.trim()) return; // Prevent sending empty messages
+        if (!newMessage.trim()) return; 
+        // Prevent sending empty messages
+        const msgsend = newMessage;
+        setNewMessage(''); 
+
         try {
             socket.current.emit("send-msg", {
                 to: selectedUser._id,
                 from: user._id,
-                msg: newMessage,
+                msg: msgsend,
             });
 
-            const response = await axios.post('http://localhost:5000/api/auth/addMessage', {
+            const response = await axios.post(ADDMSG, {
                 from: user._id,
                 to: selectedUser._id,
-                message: newMessage,
+                message: msgsend,
             });
             setMessages((prev) => [...prev, { fromSelf: true, message: response.data.message }]);
-            setNewMessage(''); 
         } catch (error) {
             console.error('Error sending message:', error);
             toast.error('Message not sent.');
         }
     };
+    
 
     useEffect(() => {
         console.log("current", socket.current);
-        if (socket.current) {
-            socket.current.on("msg-recieve", (msg) => {
-                
-                // Ensure message is for the selected user
+        const currentSocket = socket.current;
+    
+        if (currentSocket) {
+            currentSocket.on("msg-recieve", (msg) => {
                 if (msg.from === selectedUser._id) {
                     setArrivalMessage({ fromSelf: false, message: msg.msg });
                 }
             });
         }
     
-        // Clean up listener when component unmounts
         return () => {
-            socket.current.off("msg-recieve");
+            if (currentSocket) {
+                currentSocket.off("msg-recieve");
+            }
         };
-    }, [selectedUser]); 
+    }, [selectedUser]);
 
     useEffect(() => {
         arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
@@ -56,7 +67,7 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
 
     const fetchChat = async () => {
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/getMessages', {
+            const res = await axios.post(GETMSG, {
                 from: user._id,
                 to: selectedUser._id,
             });
@@ -105,7 +116,7 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
     
             <div
                 ref={scrollRef}
-                className="p-4 overflow-y-auto text-[#d1d1d1] custom-scrollbar"
+                className="p-4 overflow-y-auto text-[#d1d1d1] scrollable-div"
             >
                 {messages.map((message, index) => (
                     <div

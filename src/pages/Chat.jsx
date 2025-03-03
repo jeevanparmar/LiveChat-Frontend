@@ -7,36 +7,44 @@ import ChatEmpty from '../componet/ChatEmpty';
 import { io } from "socket.io-client";
 import { FaSignOutAlt } from 'react-icons/fa';
 import { RiChatSmileAiFill } from "react-icons/ri";
+import "../App.css"
+
 
 function Chat() {
+const B_URL = process.env.REACT_APP_BACKEND_URL ;
+const GETUSERS = `${B_URL}/api/auth/getAlluser`;
+
   const socket = useRef();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [Loading, setLoading] = useState(false);
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
-
   const onLogout = () => {
     localStorage.clear();
     navigate("/login")
   }
 
+
   useEffect(() => {
     if (user) {
-      socket.current = io("http://localhost:5000");
+      socket.current = io(B_URL, {
+        transports: ["websocket"], 
+        withCredentials: true,   
+      });
       socket.current.emit("add-user", user._id);
+      return () => {
+        socket.current.disconnect();
+      };
     }
   }, [user]);
 
-
   const fetchUsers = async (userId) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/getAlluser', { id: userId });
-      // toast.success(response.data.message);
+      const response = await axios.post(GETUSERS, { id: userId });
       setAllUsers(response.data.users);
     } catch (error) {
       console.error('Error:', error?.response?.data?.message || 'Something went wrong');
@@ -78,8 +86,7 @@ function Chat() {
               <h1 className='font-serif'> GupShup </h1>
             </div>
 
-            <div className="overflow-y-auto scrollbar-thin  scrollbar-thumb-gray-500 scrollbar-track-transparent
-             p-2 space-y-2">
+            <div className=" scrollable-div">
               {allUsers.length > 0 ? (
                 allUsers.map((u) => (
                   <div
@@ -143,7 +150,7 @@ function Chat() {
               (<div> <ChatBox selectedUser={selectedUser} setSelectedUser={setSelectedUser} user={user} socket={socket} /> </div>)
               : (<div> <ChatEmpty user={user} /> </div>)
           }
-          <div class="fixed flex justify-center items-center gap-1 bottom-2 left-1/2 -translate-x-1/2 p-2 text-white text-sm">
+          <div class="fixed flex justify-center items-center gap-1 bottom-2 left-1/2 -translate-x-1/2 p-2 text-white text-sm hide-on-small">
             <RiChatSmileAiFill />  Created by <span className='text-rose-200 font-serif uppercase '>Jeevan Parmar</span>
           </div>
 
