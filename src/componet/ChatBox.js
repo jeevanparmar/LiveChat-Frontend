@@ -88,15 +88,11 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
 
     useEffect(() => {
         setMessages([]);
+        setDlt(false)
         if (selectedUser) {
             fetchChat();
         }
     }, [selectedUser]);
-
-
-    const RemoveSelcetUserHandler = () => {
-        setSelectedUser(null);
-    }
 
     async function handleDeleteChat() {
         try {
@@ -118,12 +114,12 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
             })
         }
 
-    }
+    }  
 
     return (
-        <div className="bg-gradient-to-br from-[#1e1e2f] to-[#2b2b45] h-[80vh] rounded-xl shadow-xl overflow-hidden max-sm:h-screen">
+        <div className=" relative bg-gradient-to-br from-[#1e1e2f] to-[#2b2b45] h-[80vh] rounded-xl shadow-xl overflow-hidden max-sm:h-screen">
 
-            <div className=" relative h-full grid grid-rows-[10%_80%_10%] text-white">
+            <div className="h-full grid grid-rows-[10%_80%_10%] text-white">
 
                 <div className="p-4 bg-[#3a3a5a] font-semibold flex gap-4 items-center shadow-md justify-between">
                     <div className='flex justify-center gap-4 items-center'>
