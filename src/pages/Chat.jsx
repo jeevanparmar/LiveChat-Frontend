@@ -11,8 +11,8 @@ import "../App.css"
 
 
 function Chat() {
-const B_URL = process.env.REACT_APP_BACKEND_URL ;
-const GETUSERS = `${B_URL}/api/auth/getAlluser`;
+  const B_URL = process.env.REACT_APP_BACKEND_URL;
+  const GETUSERS = `${B_URL}/api/auth/getAlluser`;
 
   const socket = useRef();
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const GETUSERS = `${B_URL}/api/auth/getAlluser`;
   const [selectedUser, setSelectedUser] = useState(null);
   const [Loading, setLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
+
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const onLogout = () => {
     localStorage.clear();
@@ -32,8 +32,8 @@ const GETUSERS = `${B_URL}/api/auth/getAlluser`;
   useEffect(() => {
     if (user) {
       socket.current = io(B_URL, {
-        transports: ["websocket"], 
-        withCredentials: true,   
+        transports: ["websocket"],
+        withCredentials: true,
       });
       socket.current.emit("add-user", user._id);
       return () => {
@@ -94,12 +94,12 @@ const GETUSERS = `${B_URL}/api/auth/getAlluser`;
                     onClick={() => handleUserClick(u)}
                     className={`p-3 rounded-lg cursor-pointer flex items-center gap-3 transition duration-300
                        ${selectedUser && selectedUser._id === u._id
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white scale-105'
-                      : 'bg-[#4A3A60] hover:bg-[#6A4B90] text-white'
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white scale-105'
+                        : 'bg-[#4A3A60] hover:bg-[#6A4B90] text-white'
                       }`}
                   >
                     <div className="w-9 h-9 bg-blue-400 rounded-full flex items-center justify-center
-                     font-semibold max-sm:w-8 max-sm:h-8">
+                     font-serif max-sm:w-8 max-sm:h-8">
                       {u.name.charAt(0).toUpperCase()}
                     </div>
                     <span className="flex-1 truncate">{u.name}</span>
@@ -118,7 +118,7 @@ const GETUSERS = `${B_URL}/api/auth/getAlluser`;
                   <div onClick={toggleDropdown}
                     className=" cursor-pointer flex items-center gap-1" >
                     <div className="w-8 h-8 bg-[#e4cd46] rounded-full flex items-center justify-center 
-                    font-semibold max-sm:w-8 max-sm:h-8 text-black">
+                     font-serif max-sm:w-8 max-sm:h-8 text-black">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                     <span className="flex-1 truncate text-2xl text-blue-400">{user.name}</span>
@@ -150,9 +150,13 @@ const GETUSERS = `${B_URL}/api/auth/getAlluser`;
               (<div> <ChatBox selectedUser={selectedUser} setSelectedUser={setSelectedUser} user={user} socket={socket} /> </div>)
               : (<div> <ChatEmpty user={user} /> </div>)
           }
-          <div class="fixed flex justify-center items-center gap-1 bottom-2 left-1/2 -translate-x-1/2 p-2 text-white text-sm hide-on-small">
-            <RiChatSmileAiFill />  Created by <span className='text-rose-200 font-serif uppercase '>Jeevan Parmar</span>
+          <div className="fixed flex justify-center items-center gap-1 bottom-2 left-1/2 -translate-x-1/2 p-2 text-slate-200 text-sm hide-on-small">
+            <RiChatSmileAiFill className="text-lg" />
+            <span className="flex items-center font-serif gap-1">
+              Created by <span className='text-white'>JEEVAN PARMAR</span>
+            </span>
           </div>
+
 
         </div>}
     </div>

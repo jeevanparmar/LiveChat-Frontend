@@ -98,10 +98,6 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
         setSelectedUser(null);
     }
 
-    function handleCancel() {
-        setDlt(false);
-    }
-
     async function handleDeleteChat() {
         try {
             setDlt(false);
@@ -109,17 +105,17 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
                 from: user._id,
                 to: selectedUser._id,
             });
-            if(res){
+            if (res) {
                 setMessages([]);
-                toast.success("Chat Deleted",{
+                toast.success("Chat Deleted", {
                     autoClose: 1000,
                 });
             }
-         
+
         } catch (e) {
-         toast.error("Something went worng",{
-            autoClose: 5000,
-         })
+            toast.error("Something went worng", {
+                autoClose: 1000,
+            })
         }
 
     }
@@ -132,11 +128,11 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
                 <div className="p-4 bg-[#3a3a5a] font-semibold flex gap-4 items-center shadow-md justify-between">
                     <div className='flex justify-center gap-4 items-center'>
                         <MdOutlineArrowBackIos
-                            onClick={RemoveSelcetUserHandler}
+                            onClick={()=>setSelectedUser(null)}
                             className="text-2xl cursor-pointer hover:text-[#a29bfe] transition-all duration-300 max-sm:text-xl"
                         />
 
-                        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-semibold max-sm:w-8 max-sm:h-8">
+                        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center font-serif justify-center font-semibold max-sm:w-8 max-sm:h-8">
                             {selectedUser?.name?.charAt(0).toUpperCase()}
                         </div>
 
@@ -153,25 +149,24 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
                 </div>
                 {
                     dlt &&
-                    <div className="absolute inset-0 flex justify-center items-center text-black">
-                        <div className="flex h-14 bg-purple-600 gap-4 justify-center items-center p-6 rounded-lg shadow-lg">
+                    <div className="absolute inset-0 flex justify-center items-center text-white z-50">
+                        <div className="flex h-14 bg-gradient-to-r from-purple-700 to-indigo-800 gap-4 justify-center items-center p-6 rounded-xl shadow-xl">
                             <button
-                                className="border border-orange-7003
-                         px-4 py-2 rounded-lg hover:bg-[#942f74] hover:text-white transition"
+                                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-full transition-transform transform hover:scale-105 shadow-md"
                                 onClick={handleDeleteChat}
                             >
-                                Delete Chat
+                             Delete Chat
                             </button>
 
                             <button
-                                className="border px-4 py-2 rounded-lg hover:bg-[#942f74] hover:text-white transition"
-                                onClick={handleCancel}
+                                className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-6 py-2 rounded-full transition-transform transform hover:scale-105 shadow-md"
+                                onClick={()=>setDlt(false)}
                             >
-                                Cancel
+                            Cancel
                             </button>
                         </div>
-
                     </div>
+
                 }
 
                 <div
