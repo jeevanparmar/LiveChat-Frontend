@@ -71,7 +71,7 @@ const GETUSERS = `${B_URL}/api/auth/getAlluser`;
   }, [navigate]);
 
   return (
-    <div className="h-screen flex justify-center items-center bg-[#1a1c35]">
+    <div className="h-screen flex justify-center items-center bg-[#1a1c35] ">
       {
         Loading &&
         <div className="grid grid-cols-[30%_70%] gap-1 h-4/5 w-[80%] shadow-lg rounded-lg max-sm:grid-cols-1 

@@ -30,16 +30,15 @@ if(localStorage.getItem("user")){
 
   const FormSubmit = async (e) => {
     e.preventDefault();
+    
     //validation 
-    if (user.email === "" || user.password === "" || user.name === "" || user.confirmPassword === "") {
-      toast.error("Please fill all the fields");
-      return;
-    }
+  
     if (user.password !== user.confirmPassword) {
       toast.error("Password does not match");
       return;
     }
     if (user.name.length < 4) {
+      user.name.trimEnd();
       toast.error("UserName should be atleast 4  characters");
       return;
     }
