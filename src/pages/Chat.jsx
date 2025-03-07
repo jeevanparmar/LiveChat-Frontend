@@ -13,7 +13,9 @@ import "../App.css"
 function Chat() {
   const B_URL = process.env.REACT_APP_BACKEND_URL;
   const GETUSERS = `${B_URL}/api/auth/getAlluser`;
+  const ChatedUsers = `${B_URL}/api/auth/chatedMsg`;
 
+  const [activeTab, setActiveTab] = useState('All');
   const socket = useRef();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -21,6 +23,8 @@ function Chat() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [Loading, setLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [chatedUsers, setChatedUsers] = useState([]);
+  const [showUsers, setshowUsers] = useState([]);
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const onLogout = () => {
@@ -46,6 +50,7 @@ function Chat() {
     try {
       const response = await axios.post(GETUSERS, { id: userId });
       setAllUsers(response.data.users);
+      setshowUsers(response.data.users);
     } catch (error) {
       console.error('Error:', error?.response?.data?.message || 'Something went wrong');
       toast.error(error?.response?.data?.message || 'Error fetching users');
@@ -70,6 +75,26 @@ function Chat() {
     }
   }, [navigate]);
 
+  const handleChatTab = async () => {
+    setActiveTab('Chat');
+    try {
+      const response = await axios.post(ChatedUsers, { userId: user._id });
+      const chat = response.data.users;
+      const chatUserIds = chat.map((user) => user);
+      const filteredUsers = allUsers.filter((user) => chatUserIds.includes(user._id));
+      setChatedUsers(filteredUsers);
+      setshowUsers(filteredUsers);
+
+    } catch (e) {
+      alert("something went worng");
+    }
+  };
+
+  const handleAllTab = async () => {
+    setActiveTab('All');
+    setshowUsers(allUsers);
+  }
+
   return (
     <div className="h-screen flex justify-center items-center bg-[#1a1c35] ">
       {
@@ -77,7 +102,7 @@ function Chat() {
         <div className="grid grid-cols-[30%_70%] gap-1 h-4/5 w-[80%] shadow-lg rounded-lg max-sm:grid-cols-1 
         max-sm:w-full max-sm:h-screen">
 
-          <div className="bg-gradient-to-b from-[#5A3F79] to-[#2B1B3A] grid grid-rows-[12%_76%_12%] h-[80vh] 
+          <div className="bg-gradient-to-b from-[#5A3F79] to-[#2B1B3A] grid grid-rows-[12%_78%_12%] h-[80vh] 
           rounded-l-lg max-sm:rounded-lg">
 
             <div className="flex justify-center items-center font-bold text-xl text-white tracking-wide shadow-md
@@ -87,8 +112,33 @@ function Chat() {
             </div>
 
             <div className=" scrollable-div">
-              {allUsers.length > 0 ? (
-                allUsers.map((u) => (
+
+
+              {/* Tabs */}
+              <div className="flex justify-around border-b-2 p-2 mb-2">
+                <button
+                  className={`px-4 py-1 rounded-md text-white transition duration-300 
+      ${activeTab === 'All' ? 'border-b-white border-b-2 scale-110' : ''} 
+      hover:bg-gradient-to-r from-[#6A4B90] to-[#5A3F79] hover:scale-105`}
+                  onClick={() => handleAllTab()}
+                >
+                  All
+                </button>
+
+                <button
+                  className={`px-4 py-1 rounded-md text-white transition duration-300 
+      ${activeTab === 'Chat' ? 'border-b-white border-b-2 scale-110' : ''} 
+      hover:bg-gradient-to-r from-[#6A4B90] to-[#5A3F79] hover:scale-105`}
+                  onClick={() => handleChatTab()}
+                >
+                  Chats
+                </button>
+              </div>
+
+
+
+              {showUsers.length > 0 ? (
+                showUsers.map((u) => (
                   <div
                     key={u._id}
                     onClick={() => handleUserClick(u)}
@@ -106,7 +156,10 @@ function Chat() {
                   </div>
                 ))
               ) : (
-                <p className="text-center text-white opacity-75 mt-4">No Users Found</p>
+                <p className="text-center text-white opacity-75 mt-4 animate-pulse">
+                  <span>{activeTab == 'All' ? 'Users are loading...' : 'No Chat found'}</span>
+                </p>
+
               )}
             </div>
 
