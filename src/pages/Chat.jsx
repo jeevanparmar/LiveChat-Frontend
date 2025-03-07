@@ -25,6 +25,7 @@ function Chat() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [chatedUsers, setChatedUsers] = useState([]);
   const [showUsers, setshowUsers] = useState([]);
+  const [chatLoading , setChatLoading] = useState(false);
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const onLogout = () => {
@@ -76,7 +77,10 @@ function Chat() {
   }, [navigate]);
 
   const handleChatTab = async () => {
+     setshowUsers([]);
     setActiveTab('Chat');
+    setChatLoading(true);
+
     try {
       const response = await axios.post(ChatedUsers, { userId: user._id });
       const chat = response.data.users;
@@ -84,6 +88,7 @@ function Chat() {
       const filteredUsers = allUsers.filter((user) => chatUserIds.includes(user._id));
       setChatedUsers(filteredUsers);
       setshowUsers(filteredUsers);
+      setChatLoading(false);
 
     } catch (e) {
       alert("something went worng");
@@ -135,8 +140,6 @@ function Chat() {
                 </button>
               </div>
 
-
-
               {showUsers.length > 0 ? (
                 showUsers.map((u) => (
                   <div
@@ -157,7 +160,7 @@ function Chat() {
                 ))
               ) : (
                 <p className="text-center text-white opacity-75 mt-4 animate-pulse">
-                  <span>{activeTab == 'All' ? 'Users are loading...' : 'No Chat found'}</span>
+                  <span>{activeTab == 'All' ? 'Users are loading...' : (chatLoading == true ? 'Loading' : 'No chat found')}</span>
                 </p>
 
               )}
