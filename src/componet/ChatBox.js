@@ -114,7 +114,7 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
             })
         }
 
-    }  
+    }
 
     return (
         <div className=" relative bg-gradient-to-br from-[#1e1e2f] to-[#2b2b45] h-[80vh] rounded-xl shadow-xl overflow-hidden max-sm:h-screen">
@@ -124,7 +124,7 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
                 <div className="p-4 bg-[#3a3a5a] font-semibold flex gap-4 items-center shadow-md justify-between">
                     <div className='flex justify-center gap-4 items-center'>
                         <MdOutlineArrowBackIos
-                            onClick={()=>setSelectedUser(null)}
+                            onClick={() => setSelectedUser(null)}
                             className="text-2xl cursor-pointer hover:text-[#a29bfe] transition-all duration-300 max-sm:text-xl"
                         />
 
@@ -151,14 +151,14 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
                                 className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-full transition-transform transform hover:scale-105 shadow-md"
                                 onClick={handleDeleteChat}
                             >
-                             Delete Chat
+                                Delete Chat
                             </button>
 
                             <button
                                 className="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-6 py-2 rounded-full transition-transform transform hover:scale-105 shadow-md"
-                                onClick={()=>setDlt(false)}
+                                onClick={() => setDlt(false)}
                             >
-                            Cancel
+                                Cancel
                             </button>
                         </div>
                     </div>
@@ -181,12 +181,16 @@ function ChatBox({ selectedUser, user, setSelectedUser, socket }) {
                                     }`}
                                 style={{
                                     maxWidth: message.message.length > 40 ? "80%" : "60%",
+                                    wordBreak: "break-word", // Ensures words wrap properly
+                                    whiteSpace: "pre-wrap", // Preserves new lines and wraps long words
+                                    overflowWrap: "break-word",   // Supports older browsers
                                 }}
                             >
                                 {message.message}
                             </div>
                         </div>
                     ))}
+
                 </div>
 
                 <div className="p-1 bg-[#3a3a5a] shadow-inner">
